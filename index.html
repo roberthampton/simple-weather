@@ -7,9 +7,15 @@
   <body>
     <div id="app">
       <h1>Simple Weather</h1>
-      <div class="weather-container">
+      <template v-if="temperatureArray.length == 40">
+        <h3>{{cityname}}</h3>
+        <div class="weather-container">
+          <div class="Day">
 
-      </div>
+          </div>
+
+        </div>
+      </template>
     </div>
 
   </body>
@@ -19,16 +25,47 @@
     var vm = new Vue ({
     el: "#app",
     data: {
+      cityname: "",
+      temperatureArray: [],
+      descriptionArray: [],
+      timeArray: [],
+      nextDayStart: 0,
 
+    },
+    created: function () {
+      this.fetchWeatherInfo();
     },
     methods: {
       fetchWeatherInfo: function () {
-        url = ""
-        apiKey = "7b0e587d598703b6a8747ff1a31bca64"
+        apiKey = "&APPID=7b0e587d598703b6a8747ff1a31bca64"
+        url = "https://api.openweathermap.org/data/2.5/forecast?id=3333225&units=metric" + apiKey
         axios.get(url)
             .then(function (res) {
-                vm.results.push(res.data) ;
+              vm.cityname = res.data.city.name;
+                for(var i = 0; i < (res.data.list).length; i++)
+                {
+                  vm.temperatureArray.push(res.data.list[i].main.temp);
+                  vm.descriptionArray.push(res.data.list[i].weather[0].description);
+                  vm.timeArray.push(res.data.list[i].dt_txt);
+                }
+              
             });
+      },
+      //This calculates when the next day starts, so that it is known how to split up each Day
+      //This is because unless program is started in 3 hours before midnight then it will have less entries than every other day
+        calculateDayStarts: function () {
+        var currDay = parseInt((vm.timeArray[0]).substring(8,9), 10);
+        console.log(currDay);
+        //This should be refactored to be a while loop
+        for(i = 0; i < vm.timeArray.length; i++)
+        {
+          var temp = parseInt(vm.timeArray[i].substring(8,9), 10);
+          if(temp > currDay)
+          {
+              vm.nextDayStart = i;
+              break;
+          }
+        }
       }
 
     }
