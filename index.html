@@ -10,10 +10,26 @@
       <template v-if="temperatureArray.length == 40">
         <h3>{{cityname}}</h3>
         <div class="weather-container">
-          <div class="Day">
-
+          <div v-for="(days, index1) in newDayIndex">
+            {{timeArray[newDayIndex[index1]].getDate()}}
+            <ul>
+              <template v-for="(n, index2) in newDayIndex[index1]">
+                <template v-if="index1 == 0">
+                <li>
+                    {{Math.round(temperatureArray[index2])}} {{descriptionArray[index2]}} {{timeArray[index2].getHours()}}
+                </li>
+                </template>
+                  <template v-else>
+                    <template v-if="index2 >= newDayIndex[index1 - 1]">
+                    <li>
+                      {{Math.round(temperatureArray[index2])}} {{descriptionArray[index2]}} {{timeArray[index2].getHours()}}
+                    </li>
+                    </template>
+                  </template>
+                </li>
+              </template>
+            </ul>
           </div>
-
         </div>
       </template>
     </div>
@@ -29,11 +45,24 @@
       temperatureArray: [],
       descriptionArray: [],
       timeArray: [],
-      nextDayStart: 0,
-
     },
     created: function () {
       this.fetchWeatherInfo();
+    },
+    computed: {
+      newDayIndex () {
+        var arr = [];
+        var currDate = vm.timeArray[0].getDate;
+        for (var i = 1; i < vm.timeArray.length; i++) {
+          if((vm.timeArray[i]).getDate() != currDate )
+          {
+            currDate = vm.timeArray[i].getDate();
+            arr.push(i);
+          }
+        }
+        return arr;
+      },
+
     },
     methods: {
       fetchWeatherInfo: function () {
@@ -46,27 +75,12 @@
                 {
                   vm.temperatureArray.push(res.data.list[i].main.temp);
                   vm.descriptionArray.push(res.data.list[i].weather[0].description);
-                  vm.timeArray.push(res.data.list[i].dt_txt);
+                  vm.timeArray.push(new Date(res.data.list[i].dt_txt));
                 }
-              
+
             });
       },
-      //This calculates when the next day starts, so that it is known how to split up each Day
-      //This is because unless program is started in 3 hours before midnight then it will have less entries than every other day
-        calculateDayStarts: function () {
-        var currDay = parseInt((vm.timeArray[0]).substring(8,9), 10);
-        console.log(currDay);
-        //This should be refactored to be a while loop
-        for(i = 0; i < vm.timeArray.length; i++)
-        {
-          var temp = parseInt(vm.timeArray[i].substring(8,9), 10);
-          if(temp > currDay)
-          {
-              vm.nextDayStart = i;
-              break;
-          }
-        }
-      }
+
 
     }
   });
