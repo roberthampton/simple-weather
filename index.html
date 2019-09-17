@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Manjari&display=swap" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
     <meta charset="utf-8">
     <title>Simple Weather</title>
   </head>
@@ -9,20 +12,24 @@
       <h1>Simple Weather</h1>
       <template v-if="temperatureArray.length == 40">
         <h3>{{cityname}}</h3>
-        <div class="weather-container">
-          <div v-for="(days, index1) in newDayIndex">
-            {{timeArray[newDayIndex[index1]].getDate()}}
-            <ul>
+        <div class="container">
+          <div class="day-card" v-for="(days, index1) in newDayIndex">
+            {{timeArray[newDayIndex[index1]].toDateString()}}
+            <ul class="weather-list">
               <template v-for="(n, index2) in newDayIndex[index1]">
                 <template v-if="index1 == 0">
                 <li>
-                    {{Math.round(temperatureArray[index2])}} {{descriptionArray[index2]}} {{timeArray[index2].getHours()}}
+                    <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
+                    <p>{{descriptionArray[index2]}}</p>
+                    <p>{{timeArray[index2].getHours()}}</p>
                 </li>
                 </template>
                   <template v-else>
                     <template v-if="index2 >= newDayIndex[index1 - 1]">
                     <li>
-                      {{Math.round(temperatureArray[index2])}} {{descriptionArray[index2]}} {{timeArray[index2].getHours()}}
+                      <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
+                      <p>{{descriptionArray[index2]}}</p>
+                      <p>{{timeArray[index2].getHours()}}</p>
                     </li>
                     </template>
                   </template>
