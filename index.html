@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Simple Weather</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Simple Weather</h1>
+      <div class="weather-container">
+
+      </div>
+    </div>
+
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src = "https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+    var vm = new Vue ({
+    el: "#app",
+    data: {
+
+    },
+    methods: {
+      fetchWeatherInfo: function () {
+        url = ""
+        apiKey = "7b0e587d598703b6a8747ff1a31bca64"
+        axios.get(url)
+            .then(function (res) {
+                vm.results.push(res.data) ;
+            });
+      }
+
+    }
+  });
+</script>
+
+
+</html>
