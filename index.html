@@ -19,17 +19,21 @@
               <template v-for="(n, index2) in newDayIndex[index1]">
                 <template v-if="index1 == 0">
                 <li>
+                  <div class="time-forecast">
                     <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
                     <p>{{descriptionArray[index2]}}</p>
                     <p>{{timeArray[index2].getHours()}}</p>
+                  </div>
                 </li>
                 </template>
                   <template v-else>
                     <template v-if="index2 >= newDayIndex[index1 - 1]">
                     <li>
-                      <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
-                      <p>{{descriptionArray[index2]}}</p>
-                      <p>{{timeArray[index2].getHours()}}</p>
+                      <div class="time-forecast">
+                        <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
+                        <p>{{descriptionArray[index2]}}</p>
+                        <p>{{timeArray[index2].getHours()}}</p>
+                      </div>
                     </li>
                     </template>
                   </template>
