@@ -7,6 +7,13 @@
     <meta charset="utf-8">
     <title>Simple Weather</title>
   </head>
+
+<!--
+  <p class="temp">{{Math.round(temperatureArray[index2])}}°C</p>
+  <p class="desc">{{descriptionArray[index2]}}</p>
+  <p class="time">{{timeArray[index2].getHours()}}:00</p>
+-->
+
   <body>
     <div id="app">
       <h1>Simple Weather</h1>
@@ -16,28 +23,10 @@
           <div class="day-card" v-for="(days, index1) in newDayIndex">
             <p class="date">{{timeArray[newDayIndex[index1]].toDateString()}}</p>
             <ul class="weather-list">
-              <template v-for="(n, index2) in newDayIndex[index1]">
-                <template v-if="index1 == 0">
-                <li>
-                  <div class="time-forecast">
-                    <p class="temp">{{Math.round(temperatureArray[index2])}}°C</p>
-                    <p class="desc">{{descriptionArray[index2]}}</p>
-                    <p class="time">{{timeArray[index2].getHours()}}:00</p>
-                  </div>
-                </li>
+              <template v-for="(days, index1) in newDayIndex">
+                <template v-for="(temps, index2) in temperatureArray">
+
                 </template>
-                  <template v-else>
-                    <template v-if="index2 >= newDayIndex[index1 - 1]">
-                    <li>
-                      <div class="time-forecast">
-                        <p class="temp">{{Math.round(temperatureArray[index2])}}°C</p>
-                        <p class="desc">{{descriptionArray[index2]}}</p>
-                        <p class="time">{{timeArray[index2].getHours()}}:00</p>
-                      </div>
-                    </li>
-                    </template>
-                  </template>
-                </li>
               </template>
             </ul>
           </div>
@@ -63,17 +52,32 @@
     computed: {
       newDayIndex () {
         var arr = [];
-        arr.push(0);
+        arr.push(0)
         var currDate = vm.timeArray[0].getDate();
         for (var i = 1; i < vm.timeArray.length; i++) {
           if((vm.timeArray[i]).getDate() != currDate )
           {
             currDate = vm.timeArray[i].getDate();
-            arr.push(i);
+            arr.push(i-1);
           }
         }
+        arr.push(vm.timeArray.length - 1);
         return arr;
       },
+
+      dayArray () {
+        var dArr = [];
+        var currDate= vm.timeArray[0].getDate();
+
+        for(i = 0; i < vm.newDayIndex.length; i++){
+          for(j = vm.newDayIndex[i]; j < vm.newDayIndex[i+1]; j++){
+            var forecast = {temp: vm.temperatureArray[j], desc:vm.descriptionArray[j], time: vm.timeArray[j]};
+            dArr.push(forecast);
+          }
+        }
+
+        return dArr;
+      }
 
     },
     methods: {
