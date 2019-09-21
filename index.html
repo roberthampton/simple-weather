@@ -14,15 +14,15 @@
         <h3>{{cityname}}</h3>
         <div class="container">
           <div class="day-card" v-for="(days, index1) in newDayIndex">
-            {{timeArray[newDayIndex[index1]].toDateString()}}
+            <p class="date">{{timeArray[newDayIndex[index1]].toDateString()}}</p>
             <ul class="weather-list">
               <template v-for="(n, index2) in newDayIndex[index1]">
                 <template v-if="index1 == 0">
                 <li>
                   <div class="time-forecast">
-                    <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
-                    <p>{{descriptionArray[index2]}}</p>
-                    <p>{{timeArray[index2].getHours()}}</p>
+                    <p class="temp">{{Math.round(temperatureArray[index2])}}°C</p>
+                    <p class="desc">{{descriptionArray[index2]}}</p>
+                    <p class="time">{{timeArray[index2].getHours()}}:00</p>
                   </div>
                 </li>
                 </template>
@@ -30,9 +30,9 @@
                     <template v-if="index2 >= newDayIndex[index1 - 1]">
                     <li>
                       <div class="time-forecast">
-                        <p>Temperature: {{Math.round(temperatureArray[index2])}}°C</p>
-                        <p>{{descriptionArray[index2]}}</p>
-                        <p>{{timeArray[index2].getHours()}}</p>
+                        <p class="temp">{{Math.round(temperatureArray[index2])}}°C</p>
+                        <p class="desc">{{descriptionArray[index2]}}</p>
+                        <p class="time">{{timeArray[index2].getHours()}}:00</p>
                       </div>
                     </li>
                     </template>
@@ -63,7 +63,8 @@
     computed: {
       newDayIndex () {
         var arr = [];
-        var currDate = vm.timeArray[0].getDate;
+        arr.push(0);
+        var currDate = vm.timeArray[0].getDate();
         for (var i = 1; i < vm.timeArray.length; i++) {
           if((vm.timeArray[i]).getDate() != currDate )
           {
