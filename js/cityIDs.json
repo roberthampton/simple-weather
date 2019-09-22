@@ -1,0 +1,42 @@
+cityIDs = [
+  {
+    "id": 2643743,
+    "name": "London",
+    "country": "GB",
+  },
+  {
+    "id": 2650752,
+    "name": "Dundee",
+    "country": "GB",
+  },
+  {
+    "id": 2650225,
+    "name": "Edinburgh",
+    "country": "GB",
+  },
+  {
+    "id": 2648579,
+    "name": "Glasgow",
+    "country": "GB",
+  },
+  {
+    "id": 2657832,
+    "name": "Aberdeen",
+    "country": "GB",
+  },
+  {
+    "id": 2643123,
+    "name": "Manchester",
+    "country": "GB",
+  },
+  {
+    "id": 2644210,
+    "name": "Liverpool",
+    "country": "GB",
+  },
+  {
+    "id": 2644688,
+    "name": "Leeds",
+    "country": "GB",
+  }
+]

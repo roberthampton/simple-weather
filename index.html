@@ -11,6 +11,10 @@
   <body>
     <div id="app">
       <h1>Simple Weather</h1>
+      <div class="searchbar-container">
+          <input id="searchbar" type="text" name="search" placeholder="Search...">
+          <button id="submit" type="button" name="Submit">Submit</button>
+      </div>
       <template v-if="temperatureArray.length == 40">
         <h3>{{cityname}}</h3>
         <div class="container">
@@ -34,6 +38,7 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src = "https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+  <script type="text/javascript" src="js/cityIDs.json"></script>
 <script>
     var vm = new Vue ({
     el: "#app",
@@ -46,9 +51,11 @@
       sunIcon: "img/sun.png",
       cloudIcon: "img/cloud.png",
     },
-    created: function () {
+
+    created() {
       this.fetchWeatherInfo();
     },
+
     computed: {
       newDayIndex () {
         var arr = [];
@@ -91,13 +98,19 @@
         }
 
         return dArr;
-      }
+      },
+
+
 
     },
+
     methods: {
       fetchWeatherInfo: function () {
         apiKey = "&APPID=7b0e587d598703b6a8747ff1a31bca64"
-        url = "https://api.openweathermap.org/data/2.5/forecast?id=3333225&units=metric" + apiKey
+        units = "&units=metric"
+        currId = "2648579";
+
+        url = "https://api.openweathermap.org/data/2.5/forecast?id=" + currId + units + apiKey
         axios.get(url)
             .then(function (res) {
               vm.cityname = res.data.city.name;
@@ -115,6 +128,8 @@
     }
   });
 </script>
+
+
 
 
 </html>

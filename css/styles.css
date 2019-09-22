@@ -18,7 +18,42 @@ h3 {
   width: 100%;
   font-size: 2em;
   text-align: center;
-  margin-top: 0;
+  margin-top: 5%;
+}
+
+.searchbar-container {
+  text-align:center;
+}
+
+#searchbar {
+  padding: 2%;
+  border: 1px solid black;
+  font-family: 'Manjari', sans-serif;
+  font-size: 2em;
+  border-radius: 2%;
+  width: 35%;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  height: inherit;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+#submit {
+  font-family: 'Manjari', sans-serif;
+  background-color: rgb(82, 145, 247);
+  border: none;
+  color: white;
+  padding: 2%;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 2em;
+  height: inherit;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.searchbar:focus {
+  width: 60%;
 }
 
 .weather-list {
