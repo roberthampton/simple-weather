@@ -8,25 +8,22 @@
     <title>Simple Weather</title>
   </head>
 
-<!--
-  <p class="temp">{{Math.round(temperatureArray[index2])}}°C</p>
-  <p class="desc">{{descriptionArray[index2]}}</p>
-  <p class="time">{{timeArray[index2].getHours()}}:00</p>
--->
-
   <body>
     <div id="app">
       <h1>Simple Weather</h1>
       <template v-if="temperatureArray.length == 40">
         <h3>{{cityname}}</h3>
         <div class="container">
-          <div class="day-card" v-for="(days, index1) in newDayIndex">
+          <div class="day-card" v-for="(days, index1) in dayArray">
             <p class="date">{{timeArray[newDayIndex[index1]].toDateString()}}</p>
             <ul class="weather-list">
-              <template v-for="(days, index1) in newDayIndex">
-                <template v-for="(temps, index2) in temperatureArray">
-
-                </template>
+              <template v-for="(forecast, index2) in dayArray[index1]">
+                <li class="forecast">
+                  <p class="time">{{dayArray[index1][index2].time}}:00</p>
+                  <p class="temp">{{Math.round(dayArray[index1][index2].temp)}}°C</p>
+                  <p class="desc">{{dayArray[index1][index2].desc}}</p>
+                  <img class="image" v-bind:src="dayArray[index1][index2].img">
+                </li>
               </template>
             </ul>
           </div>
@@ -45,6 +42,9 @@
       temperatureArray: [],
       descriptionArray: [],
       timeArray: [],
+      rainIcon: "img/rain.png",
+      sunIcon: "img/sun.png",
+      cloudIcon: "img/cloud.png",
     },
     created: function () {
       this.fetchWeatherInfo();
@@ -52,13 +52,13 @@
     computed: {
       newDayIndex () {
         var arr = [];
-        arr.push(0)
         var currDate = vm.timeArray[0].getDate();
-        for (var i = 1; i < vm.timeArray.length; i++) {
+        arr.push(0);
+        for (var i = 0; i < vm.timeArray.length; i++) {
           if((vm.timeArray[i]).getDate() != currDate )
           {
             currDate = vm.timeArray[i].getDate();
-            arr.push(i-1);
+            arr.push(i);
           }
         }
         arr.push(vm.timeArray.length - 1);
@@ -69,11 +69,25 @@
         var dArr = [];
         var currDate= vm.timeArray[0].getDate();
 
-        for(i = 0; i < vm.newDayIndex.length; i++){
+        for(i = 0; i < vm.newDayIndex.length - 1; i++){
+          var forecastArr = [];
           for(j = vm.newDayIndex[i]; j < vm.newDayIndex[i+1]; j++){
-            var forecast = {temp: vm.temperatureArray[j], desc:vm.descriptionArray[j], time: vm.timeArray[j]};
-            dArr.push(forecast);
+            var image;
+            if(vm.descriptionArray[j].includes("rain"))
+            {
+              image = vm.rainIcon;
+            }
+            else if (vm.descriptionArray[j].includes("cloud") || vm.descriptionArray[j].includes("overcast")) {
+              image = vm.cloudIcon;
+            }
+            else if (vm.descriptionArray[j].includes("clear")) {
+              image = vm.sunIcon;
+            }
+
+            var forecast = {temp: vm.temperatureArray[j], desc:vm.descriptionArray[j], time: vm.timeArray[j].getHours(), img: image};
+            forecastArr.push(forecast);
           }
+          dArr.push(forecastArr);
         }
 
         return dArr;
