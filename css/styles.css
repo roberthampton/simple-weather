@@ -16,7 +16,7 @@ h1 {
 
 h3 {
   width: 100%;
-  font-size: 2em;
+  font-size: 3em;
   text-align: center;
   margin-top: 5%;
 }
@@ -52,8 +52,16 @@ h3 {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
-.searchbar:focus {
+#searchbar:focus {
   width: 60%;
+}
+
+#suggestions {
+
+}
+
+.suggestion-box {
+
 }
 
 .weather-list {

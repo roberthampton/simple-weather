@@ -12,11 +12,13 @@
     <div id="app">
       <h1>Simple Weather</h1>
       <div class="searchbar-container">
-          <input id="searchbar" type="text" name="search" placeholder="Search...">
-          <button id="submit" type="button" name="Submit">Submit</button>
+          <input v-model="searchCityName" id="searchbar"  type="text" name="search" placeholder="Search...">
+          <button @click="searchNames" id="submit"  type="button" name="Submit">Submit</button>
+      </div>
+      <div id="suggestions">
       </div>
       <template v-if="temperatureArray.length == 40">
-        <h3>{{cityname}}</h3>
+        <h3 id="title">{{cityname}}</h3>
         <div class="container">
           <div class="day-card" v-for="(days, index1) in dayArray">
             <p class="date">{{timeArray[newDayIndex[index1]].toDateString()}}</p>
@@ -34,7 +36,6 @@
         </div>
       </template>
     </div>
-
   </body>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src = "https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
@@ -50,14 +51,25 @@
       rainIcon: "img/rain.png",
       sunIcon: "img/sun.png",
       cloudIcon: "img/cloud.png",
+      currId: "",
+      searchCityName: "",
+      searchSuggestions: [],
     },
 
-    created() {
+    watch: {
+    currId: function () {
+      this.resetWeatherInfo();
       this.fetchWeatherInfo();
     },
 
+    searchCityName: function() {
+      this.updateSearchSuggestions();
+    }
+  },
+
     computed: {
-      newDayIndex () {
+      newDayIndex: {
+        get: function() {
         var arr = [];
         var currDate = vm.timeArray[0].getDate();
         arr.push(0);
@@ -72,7 +84,13 @@
         return arr;
       },
 
-      dayArray () {
+      set: function() {
+        return arr = [];
+      }
+    },
+
+      dayArray: {
+        get: function() {
         var dArr = [];
         var currDate= vm.timeArray[0].getDate();
 
@@ -100,17 +118,81 @@
         return dArr;
       },
 
-
-
+      set: function() {
+        return dArr = [];
+      }
     },
+  },
 
     methods: {
+      searchNames: function () {
+                for (var i = 0; i < cityIDs.length; i++) {
+                  if(this.searchCityName == cityIDs[i].name) {
+                    this.currId = cityIDs[i].id;
+                  }
+                }
+            },
+
+      resetWeatherInfo: function () {
+          vm.temperatureArray = [];
+          vm.timeArray = [];
+          vm.descriptionArray = [];
+          vm.dayArray = [];
+          vm.newDayIndex = [];
+      },
+
+      findSearchSuggestions: function () {
+        for (var i = 0; i < cityIDs.length; i++) {
+          if((cityIDs[i].name).toLowerCase().includes(vm.searchCityName.toLowerCase()))
+          {
+            var found = false;
+            for (var i = 0; i < searchSuggestions.length; i++) {
+              if (vm.searchSuggestions[i].name.toLowerCase() == vm.searchCityName.toLowerCase()) {
+                found = true;
+              }
+            }
+            if (!found) {
+              vm.searchSuggestions.push(cityIDs[i]);
+            }
+
+          }
+        }
+
+        if(vm.searchCityName == "")
+        {
+          while (suggestionsDiv.firstChild) {
+            suggestionsDiv.removeChild(suggestionsDiv.firstChild);
+          }
+        }
+      }
+
+      updateSearchSuggestions: function () {
+        var suggestionsDiv = document.getElementById("suggestions");
+
+        var found = false;
+        for (var i = 0; i < cityIDs.length; i++) {
+          if((cityIDs[i].name).toLowerCase().includes(vm.searchCityName.toLowerCase()))
+          {
+            var newSuggestion = document.createElement("div");
+            newSuggestion.className = "suggestion-box";
+            var newContent = document.createTextNode(cityIDs[i].name);
+            newSuggestion.appendChild(newContent);
+            suggestionsDiv.append(newSuggestion);
+            found = true;
+          }
+        }
+        if(!found || vm.searchCityName == "")
+        {
+          while (suggestionsDiv.firstChild) {
+            suggestionsDiv.removeChild(suggestionsDiv.firstChild);
+          }
+        }
+      },
+
       fetchWeatherInfo: function () {
         apiKey = "&APPID=7b0e587d598703b6a8747ff1a31bca64"
         units = "&units=metric"
-        currId = "2648579";
-
-        url = "https://api.openweathermap.org/data/2.5/forecast?id=" + currId + units + apiKey
+        url = "https://api.openweathermap.org/data/2.5/forecast?id=" + vm.currId + units + apiKey
         axios.get(url)
             .then(function (res) {
               vm.cityname = res.data.city.name;
@@ -123,8 +205,6 @@
 
             });
       },
-
-
     }
   });
 </script>
