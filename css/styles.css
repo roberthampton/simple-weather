@@ -23,6 +23,25 @@ h3 {
 
 .searchbar-container {
   text-align:center;
+  justify-content: center;
+  align-content: center;
+
+}
+
+#suggestions {
+  justify-content: center;
+  height: inherit;
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+
+.suggestion {
+  border: 1px solid black;
+  width: 100%;
+  padding: 2%;
+  font-size: 1.8em;
+  border-radius: 2%;
 }
 
 #searchbar {
@@ -53,15 +72,7 @@ h3 {
 }
 
 #searchbar:focus {
-  width: 60%;
-}
-
-#suggestions {
-
-}
-
-.suggestion-box {
-
+  width: 50%;
 }
 
 .weather-list {

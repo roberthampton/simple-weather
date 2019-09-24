@@ -14,9 +14,10 @@
       <div class="searchbar-container">
           <input v-model="searchCityName" id="searchbar"  type="text" name="search" placeholder="Search...">
           <button @click="searchNames" id="submit"  type="button" name="Submit">Submit</button>
+          <div id="suggestions">
+          </div>
       </div>
-      <div id="suggestions">
-      </div>
+
       <template v-if="temperatureArray.length == 40">
         <h3 id="title">{{cityname}}</h3>
         <div class="container">
@@ -63,6 +64,7 @@
     },
 
     searchCityName: function() {
+      this.findSearchSuggestions();
       this.updateSearchSuggestions();
     }
   },
@@ -127,7 +129,7 @@
     methods: {
       searchNames: function () {
                 for (var i = 0; i < cityIDs.length; i++) {
-                  if(this.searchCityName == cityIDs[i].name) {
+                  if(this.searchCityName.toLowerCase() == cityIDs[i].name.toLowerCase() ) {
                     this.currId = cityIDs[i].id;
                   }
                 }
@@ -142,50 +144,38 @@
       },
 
       findSearchSuggestions: function () {
-        for (var i = 0; i < cityIDs.length; i++) {
-          if((cityIDs[i].name).toLowerCase().includes(vm.searchCityName.toLowerCase()))
+          vm.searchSuggestions = [];
+
+          if(vm.searchCityName == "")
           {
-            var found = false;
-            for (var i = 0; i < searchSuggestions.length; i++) {
-              if (vm.searchSuggestions[i].name.toLowerCase() == vm.searchCityName.toLowerCase()) {
-                found = true;
+            return;
+          }
+
+          for (var i = 0; i < cityIDs.length; i++) {
+            if (cityIDs[i].name.toLowerCase().includes(vm.searchCityName.toLowerCase()) ) {
+              if(cityIDs[i].name.toLowerCase().startsWith(vm.searchCityName.toLowerCase())) {
+                vm.searchSuggestions.unshift(cityIDs[i].name)
+              }
+              else {
+                vm.searchSuggestions.push(cityIDs[i].name)
               }
             }
-            if (!found) {
-              vm.searchSuggestions.push(cityIDs[i]);
-            }
-
           }
-        }
-
-        if(vm.searchCityName == "")
-        {
-          while (suggestionsDiv.firstChild) {
-            suggestionsDiv.removeChild(suggestionsDiv.firstChild);
-          }
-        }
-      }
+      },
 
       updateSearchSuggestions: function () {
-        var suggestionsDiv = document.getElementById("suggestions");
-
-        var found = false;
-        for (var i = 0; i < cityIDs.length; i++) {
-          if((cityIDs[i].name).toLowerCase().includes(vm.searchCityName.toLowerCase()))
-          {
-            var newSuggestion = document.createElement("div");
-            newSuggestion.className = "suggestion-box";
-            var newContent = document.createTextNode(cityIDs[i].name);
-            newSuggestion.appendChild(newContent);
-            suggestionsDiv.append(newSuggestion);
-            found = true;
-          }
+        var searchbarSuggestions = document.getElementById("suggestions");
+        while (searchbarSuggestions.firstChild) {
+          searchbarSuggestions.removeChild(searchbarSuggestions.firstChild);
         }
-        if(!found || vm.searchCityName == "")
-        {
-          while (suggestionsDiv.firstChild) {
-            suggestionsDiv.removeChild(suggestionsDiv.firstChild);
-          }
+
+        for (var i = 0; i < vm.searchSuggestions.length; i++) {
+          var suggestion = document.createElement("div");
+          suggestion.className = "suggestion";
+          var text = document.createTextNode(vm.searchSuggestions[i]);
+          suggestion.appendChild(text);
+
+          searchbarSuggestions.appendChild(suggestion);
         }
       },
 
