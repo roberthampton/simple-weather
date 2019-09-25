@@ -12,7 +12,7 @@
     <div id="app">
       <h1>Simple Weather</h1>
       <div class="searchbar-container">
-          <input v-model="searchCityName" id="searchbar"  type="text" name="search" placeholder="Search...">
+          <input v-model="searchCityName" v-on:keyup.enter="searchNames" id="searchbar"  type="text" name="search" placeholder="Search...">
           <button @click="searchNames" id="submit"  type="button" name="Submit">Submit</button>
           <div id="suggestions">
           </div>
@@ -141,6 +141,8 @@
           vm.descriptionArray = [];
           vm.dayArray = [];
           vm.newDayIndex = [];
+
+          vm.searchCityName = "";
       },
 
       findSearchSuggestions: function () {
@@ -169,11 +171,27 @@
           searchbarSuggestions.removeChild(searchbarSuggestions.firstChild);
         }
 
+        if(vm.searchSuggestions.length > 0)
+        {
+          var suggestionMessage = document.createElement("p");
+          suggestionMessage.className = "suggestion-message";
+          suggestionMessage.innerHTML = "Are you looking for the weather in...?";
+          searchbarSuggestions.appendChild(suggestionMessage);
+        }
+
         for (var i = 0; i < vm.searchSuggestions.length; i++) {
-          var suggestion = document.createElement("div");
+          var suggestion = document.createElement("button");
           suggestion.className = "suggestion";
+          suggestion.id = "button" + i.toString();
           var text = document.createTextNode(vm.searchSuggestions[i]);
           suggestion.appendChild(text);
+
+          var id = suggestion.id;
+
+          suggestion.addEventListener("click", function(){
+            thisButton = document.getElementById(event.target.id);
+            vm.searchCityName = thisButton.innerHTML;
+        });
 
           searchbarSuggestions.appendChild(suggestion);
         }
