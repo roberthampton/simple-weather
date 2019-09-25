@@ -4,6 +4,13 @@ cityIDs = [
     "name": "London",
     "country": "GB",
   },
+
+  {
+    "id": 2654675,
+    "name": "Bristol",
+    "country": "GB",
+  },
+
   {
     "id": 2650752,
     "name": "Dundee",
@@ -38,5 +45,56 @@ cityIDs = [
     "id": 2644688,
     "name": "Leeds",
     "country": "GB",
-  }
+  },
+  {
+    "id": 2634677,
+    "name": "Watford",
+    "country": "GB",
+  },
+  {
+    "id": 2636910,
+    "name": "Stirling",
+    "country": "GB",
+  },
+  {
+    "id": 2653941,
+    "name": "Cambridge",
+    "country": "GB",
+  },
+  {
+    "id": 2654710,
+    "name": "Brighton",
+    "country": "GB",
+  },
+  {
+    "id": 2633352,
+    "name": "York",
+    "country": "GB",
+  },
+  {
+    "id": 2646458,
+    "name": "Huddersfield",
+    "country": "GB",
+  },
+  {
+    "id": 2653822,
+    "name": "Cardiff",
+    "country": "GB",
+  },
+  {
+    "id": 2653775,
+    "name": "Carlisle",
+    "country": "GB",
+  },
+  {
+    "id": 2640358,
+    "name": "Perth",
+    "country": "GB",
+  },
+  {
+    "id": 2642135,
+    "name": "Motherwell",
+    "country": "GB",
+  },
+
 ]
