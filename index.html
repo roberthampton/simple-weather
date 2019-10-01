@@ -10,7 +10,7 @@
 
   <body>
     <div id="app">
-      <h1>Simple Weather</h1>
+      <h1>Robert's Weather ⛅</h1>
       <div class="searchbar-container">
           <input v-model="searchCityName" v-on:keyup.enter="searchNames" id="searchbar"  type="text" name="search" placeholder="Search...">
           <button @click="searchNames" id="submit"  type="button" name="Submit">Submit</button>
@@ -47,24 +47,33 @@
     var vm = new Vue ({
     el: "#app",
     data: {
+      //Name of the current city - used to display city name in html
       cityname: "",
+      //Array to store all temperature forecasts from the API response
       temperatureArray: [],
+      //Array to store all descriptions from forecasts from the API response
       descriptionArray: [],
+      //Array to store all times of forecasts from the API response
       timeArray: [],
       rainIcon: "img/rain.png",
       sunIcon: "img/sun.png",
       cloudIcon: "img/cloud.png",
+      //Current ID of the selected city - used to make call to API to select the desired city
       currId: "",
+      //Bound to the search bar using v-bind so that any text put into searchbar can be accessed and used in script
       searchCityName: "",
+      //Array to store all the found search suggestions when the text in the searchbar is changed
       searchSuggestions: [],
     },
 
     watch: {
+    //ID used to make the API call for the selected city - performed when currId is set by another function
     currId: function () {
       this.resetWeatherInfo();
       this.fetchWeatherInfo();
     },
 
+    //Input from searchbar, used for search suggestions - performed everytime the text in the searchbar changes.
     searchCityName: function() {
       this.findSearchSuggestions();
       this.updateSearchSuggestions();
@@ -72,6 +81,8 @@
   },
 
     computed: {
+      //Creates and returns an array where each position is the index in the timeArray of when the next
+      //day starts
       newDayIndex: {
         get: function() {
         var arr = [];
@@ -88,11 +99,14 @@
         return arr;
       },
 
+      //Sets the array to be empty again so that if city is changed the weather info can be recalculated.
       set: function() {
         return arr = [];
       }
     },
 
+      //Creates and returns a 2D array - element for every day in the array, and each element (day)
+      //holds an array of forecasts - each element has the time of that forecast as well as the temp and desc
       dayArray: {
         get: function() {
         var dArr = [];
@@ -112,16 +126,18 @@
             else if (vm.descriptionArray[j].includes("clear")) {
               image = vm.sunIcon;
             }
-
+            //Creates a forecast object with the corresponding info for a forecast
             var forecast = {temp: vm.temperatureArray[j], desc:vm.descriptionArray[j], time: vm.timeArray[j].getHours(), img: image};
+            //Adds each forecast for a day into an array so that this array can be used to represent this day
             forecastArr.push(forecast);
           }
+          //Pushes the forecast array to the day array so that for each day there is a corresponding array of forecasts.
           dArr.push(forecastArr);
         }
 
         return dArr;
       },
-
+      //Sets dayArray to be empty so that if city is changed it can be recalculated.
       set: function() {
         return dArr = [];
       }
@@ -129,6 +145,10 @@
   },
 
     methods: {
+      //Iterates through the array of cities (from JSON file) to check if their name is the same
+      //as what is in the searchbar. If so, the city ID is set. This is only done when submit is clicked/enter pressed.
+      //This isn't a very efficient search strategy (iterate every element and check) - ideally would order json
+      //perhaps alphabetically and jump straight to first letter entered.
       searchNames: function () {
                 for (var i = 0; i < cityIDs.length; i++) {
                   if(this.searchCityName.toLowerCase() == cityIDs[i].name.toLowerCase() ) {
@@ -137,42 +157,52 @@
                 }
             },
 
+      //Sets all arrays/variables back to being empty so that they can be recomputed if the user changes the city.
       resetWeatherInfo: function () {
           vm.temperatureArray = [];
           vm.timeArray = [];
           vm.descriptionArray = [];
           vm.dayArray = [];
           vm.newDayIndex = [];
-
           vm.searchCityName = "";
       },
 
+      //First clears search suggestion array then adds the cities from the JSON file that contain what is
+      //in the search bar in their name.
       findSearchSuggestions: function () {
           vm.searchSuggestions = [];
-
+          //If there is nothing in the searchbar do nothing
           if(vm.searchCityName == "")
           {
             return;
           }
 
+          //For all the cities from the JSON file
           for (var i = 0; i < cityIDs.length; i++) {
+            //both strings changed to lower case as contains function is case sensitive
             if (cityIDs[i].name.toLowerCase().includes(vm.searchCityName.toLowerCase()) ) {
               if(cityIDs[i].name.toLowerCase().startsWith(vm.searchCityName.toLowerCase())) {
+                //Adds to the start of the array as it starts with string in searchbar and is therefore a more likely match
                 vm.searchSuggestions.unshift(cityIDs[i].name)
               }
               else {
+                //Adds to the end of the array
                 vm.searchSuggestions.push(cityIDs[i].name)
               }
             }
           }
       },
-
+      //Uses the search suggestion array to generate and append the html elements used to display the suggestions
       updateSearchSuggestions: function () {
         var searchbarSuggestions = document.getElementById("suggestions");
+        //Clears all the searchbar suggestion elements so that they are not repeated every time a character is changed
+        //in the searchbar. This is perhaps not the most efficient way to do things - maybe a check could be done to see
+        //what has already been added then elements could be added from there.
         while (searchbarSuggestions.firstChild) {
           searchbarSuggestions.removeChild(searchbarSuggestions.firstChild);
         }
 
+        //If suggestion(s) has been added - add text to give context to search suggestions
         if(vm.searchSuggestions.length > 0)
         {
           var suggestionMessage = document.createElement("p");
@@ -181,6 +211,7 @@
           searchbarSuggestions.appendChild(suggestionMessage);
         }
 
+        //For every search suggestion element - create a new div with text and add that to the suggestion div.
         for (var i = 0; i < vm.searchSuggestions.length; i++) {
           var suggestion = document.createElement("button");
           suggestion.className = "suggestion";
@@ -190,6 +221,7 @@
 
           var id = suggestion.id;
 
+          //Event listener so that if a search suggestion is clicked its text is added to the searchbar
           suggestion.addEventListener("click", function(){
             thisButton = document.getElementById(event.target.id);
             vm.searchCityName = thisButton.innerHTML;
@@ -204,11 +236,14 @@
         apiKey = "&APPID=7b0e587d598703b6a8747ff1a31bca64"
         units = "&units=metric"
         url = "https://api.openweathermap.org/data/2.5/forecast?id=" + vm.currId + units + apiKey
+        //Axios is being used to get the API response so that it can be correctly parsed and its data added to the correct arrays.
         axios.get(url)
             .then(function (res) {
               vm.cityname = res.data.city.name;
+              //For each element in the list from the JSON (API response)
                 for(var i = 0; i < (res.data.list).length; i++)
                 {
+                  //Adds the data from the API response to the correct corresponding arrays
                   vm.temperatureArray.push(res.data.list[i].main.temp);
                   vm.descriptionArray.push(res.data.list[i].weather[0].description);
                   vm.timeArray.push(new Date(res.data.list[i].dt_txt));
