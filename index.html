@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Manjari&display=swap" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
     <meta charset="utf-8">
-    <title>Simple Weather</title>
+    <title>Robert's Weather</title>
   </head>
 
   <body>
@@ -29,9 +29,7 @@
                   <p class="time">{{dayArray[index1][index2].time}}:00</p>
                   <p class="temp">{{Math.round(dayArray[index1][index2].temp)}}°C</p>
                   <p class="desc">{{dayArray[index1][index2].desc}}</p>
-                  <!--
-                  <img class="image" v-bind:src="dayArray[index1][index2].img">
-                -->
+                  <p class="icon">{{dayArray[index1][index2].icon}}</p>
                 </li>
               </template>
             </ul>
@@ -118,16 +116,20 @@
             var image;
             if(vm.descriptionArray[j].includes("rain"))
             {
-              image = vm.rainIcon;
+              img = "🌧️";
             }
             else if (vm.descriptionArray[j].includes("cloud") || vm.descriptionArray[j].includes("overcast")) {
-              image = vm.cloudIcon;
+              img = "☁️";
             }
             else if (vm.descriptionArray[j].includes("clear")) {
-              image = vm.sunIcon;
+              img = "☀️";
+            }
+
+            else if (vm.descriptionArray[j].includes("snow")) {
+              img = "🌨️";
             }
             //Creates a forecast object with the corresponding info for a forecast
-            var forecast = {temp: vm.temperatureArray[j], desc:vm.descriptionArray[j], time: vm.timeArray[j].getHours(), img: image};
+            var forecast = {temp: vm.temperatureArray[j], desc:vm.descriptionArray[j], time: vm.timeArray[j].getHours(), icon: img};
             //Adds each forecast for a day into an array so that this array can be used to represent this day
             forecastArr.push(forecast);
           }
@@ -254,8 +256,4 @@
     }
   });
 </script>
-
-
-
-
 </html>
