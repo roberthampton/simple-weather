@@ -96,5 +96,15 @@ cityIDs = [
     "name": "Motherwell",
     "country": "GB",
   },
+  {
+    "id": 2650732,
+    "name": "Dunfermline",
+    "country": "GB",
+  },
+  {
+    "id": 2646088,
+    "name": "Inverness",
+    "country": "GB",
+  }
 
 ]
